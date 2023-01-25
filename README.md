@@ -1,2 +1,2 @@
-# mortgage-price-model
-A simple model for predicting mortgage prices in Norway based on publicly available data.
+# House Price Model
+A simple model for predicting house prices in Norway based on publicly available data.
