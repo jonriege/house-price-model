@@ -1,0 +1,9 @@
+name: house-price-model-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10.9
+  - jupyter
+  - plotly
+  - polars
+  - pre-commit
