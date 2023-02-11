@@ -7,3 +7,5 @@ dependencies:
   - plotly
   - polars
   - pre-commit
+  - PyYAML
+  - types-PyYAML

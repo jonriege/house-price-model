@@ -1,0 +1,2 @@
+data_loading:
+  ssb_api_url: 'https://data.ssb.no/api/v0/no/'
