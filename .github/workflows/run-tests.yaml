@@ -23,7 +23,7 @@ jobs:
         conda env update --file environment.yaml --name base
 
   test:
-    needs: build
+    needs: setup
     runs-on: ubuntu-latest
     steps:
     - name: Lint with flake8
