@@ -3,9 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.9
-  - jupyter
-  - plotly
-  - polars
   - pre-commit
   - pyyaml
   - types-pyyaml
+  - jupyter
