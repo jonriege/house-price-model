@@ -23,5 +23,9 @@ repos:
   rev: v1.0.0
   hooks:
     - id: mypy
-      args: [--disallow-untyped-defs, --disallow-incomplete-defs, --disallow-untyped-calls]
-      additional_dependencies: ['types-PyYAML']
+      exclude: ^tests/
+      args:
+      - --disallow-untyped-defs
+      - --disallow-incomplete-defs
+      - --disallow-untyped-calls
+      additional_dependencies: ['types-pyyaml']
