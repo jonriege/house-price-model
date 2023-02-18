@@ -2,7 +2,7 @@ name: house-price-model-env
 channels:
   - conda-forge
 dependencies:
-  - python=3.10
+  - python==3.10.*
   - pre-commit
   - pyyaml
   - types-pyyaml
