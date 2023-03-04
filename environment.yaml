@@ -9,5 +9,6 @@ dependencies:
   - jupyter
   - pytest
   - requests
+  - types-requests
   - pandas
   - flake8

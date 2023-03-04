@@ -10,6 +10,8 @@ repos:
     rev: 23.1.0
     hooks:
     -   id: black
+        args:
+          - --line-length=80
     -   id: black-jupyter
 -   repo: https://github.com/PyCQA/isort
     rev: 5.12.0
@@ -28,4 +30,4 @@ repos:
       - --disallow-untyped-defs
       - --disallow-incomplete-defs
       - --disallow-untyped-calls
-      additional_dependencies: ['types-pyyaml']
+      additional_dependencies: ['types-pyyaml', 'types-requests']
