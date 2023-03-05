@@ -12,3 +12,6 @@ dependencies:
   - types-requests
   - pandas
   - flake8
+  - pip
+  - pip:
+      - pyjstat
