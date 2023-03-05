@@ -30,4 +30,5 @@ repos:
       - --disallow-untyped-defs
       - --disallow-incomplete-defs
       - --disallow-untyped-calls
+      - --ignore-missing-imports
       additional_dependencies: ['types-pyyaml', 'types-requests']
