@@ -31,4 +31,7 @@ repos:
       - --disallow-incomplete-defs
       - --disallow-untyped-calls
       - --ignore-missing-imports
-      additional_dependencies: ['types-pyyaml', 'types-requests']
+      additional_dependencies:
+      - types-pyyaml
+      - types-requests
+      - pandas-stubs
