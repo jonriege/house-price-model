@@ -1,2 +1,12 @@
 data_loading:
   ssb_api_url: 'https://data.ssb.no/api/v0/no/table/'
+
+  house_prices:
+    table: '07240'
+    query:
+      - key: Boligtype
+        filter: 'item'
+        values: ['00']
+      - key: ContentsCode
+        filter: 'item'
+        values: ['KvPris']

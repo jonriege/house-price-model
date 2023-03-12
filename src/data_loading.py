@@ -7,6 +7,21 @@ from pyjstat import pyjstat
 from requests import post
 
 
+def load_house_prices(config: dict) -> pd.DataFrame:
+    """Loads annual sqm prices for existing dwellings.
+
+    Args:
+        config: Config
+
+    Returns:
+    """
+    table = config["data_loading"]["house_prices"]["table"]
+    query_config = config["data_loading"]["house_prices"]["query"]
+    query = generate_ssb_query(query_config=query_config)
+    ssb_api_output = load_ssb_table(config=config, table=table, query=query)
+    return parse_ssb_data(ssb_api_output=ssb_api_output)
+
+
 def load_ssb_table(config: dict, table: str, query: list[dict]) -> str:
     """Loads data from SSB API.
 
@@ -24,6 +39,29 @@ def load_ssb_table(config: dict, table: str, query: list[dict]) -> str:
     response = post(url, json=payload)
     response.raise_for_status()
     return response.text
+
+
+def generate_ssb_query(query_config: list[dict]) -> list[dict]:
+    """Generates a query with the format read by the SSB API.
+
+    Args:
+        query_config: List of selection filters.
+
+    Returns:
+        Dictionary with the selection formatted as an SSB API query.
+    """
+    query = []
+    for item in query_config:
+        query.append(
+            {
+                "code": item["key"],
+                "selection": {
+                    "filter": item["filter"],
+                    "values": item["values"],
+                },
+            }
+        )
+    return query
 
 
 def parse_ssb_data(ssb_api_output: str) -> pd.DataFrame:

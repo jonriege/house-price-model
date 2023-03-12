@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import pytest
 
-from src.data_loading import load_ssb_table, parse_ssb_data
+from src.data_loading import load_house_prices, load_ssb_table, parse_ssb_data
 
 
 @pytest.fixture(scope="function")
@@ -40,3 +40,11 @@ def test_parse_ssb_data(ssb_api_output: str):
     assert isinstance(df, pd.DataFrame)
     assert df.shape[0] == 1
     assert df.loc[0, "value"] == 44599
+
+
+def test_load_house_prices(config: dict):
+    """Tests loading of house prices."""
+    df = load_house_prices(config=config)
+    columns = ["boligtype", "statistikkvariabel", "kvartal", "value"]
+    assert isinstance(df, pd.DataFrame)
+    assert set(columns).issubset(df.columns)
