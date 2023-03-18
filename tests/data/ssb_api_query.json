@@ -1,0 +1,20 @@
+[
+   {
+      "code":"Boligtype",
+      "selection":{
+         "filter":"item",
+         "values":[
+            "00"
+         ]
+      }
+   },
+   {
+      "code":"ContentsCode",
+      "selection":{
+         "filter":"item",
+         "values":[
+            "KvPris"
+         ]
+      }
+   }
+]

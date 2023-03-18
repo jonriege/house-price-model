@@ -17,12 +17,12 @@ def load_house_prices(config: dict) -> pd.DataFrame:
     """
     table = config["data_loading"]["house_prices"]["table"]
     query_config = config["data_loading"]["house_prices"]["query"]
-    query = generate_ssb_query(query_config=query_config)
-    ssb_api_output = load_ssb_table(config=config, table=table, query=query)
-    return parse_ssb_data(ssb_api_output=ssb_api_output)
+    query = _generate_ssb_query(query_config=query_config)
+    ssb_api_output = _load_ssb_table(config=config, table=table, query=query)
+    return _parse_ssb_data(ssb_api_output=ssb_api_output)
 
 
-def load_ssb_table(config: dict, table: str, query: list[dict]) -> str:
+def _load_ssb_table(config: dict, table: str, query: list[dict]) -> str:
     """Loads data from SSB API.
 
     Args:
@@ -41,7 +41,7 @@ def load_ssb_table(config: dict, table: str, query: list[dict]) -> str:
     return response.text
 
 
-def generate_ssb_query(query_config: list[dict]) -> list[dict]:
+def _generate_ssb_query(query_config: list[dict]) -> list[dict]:
     """Generates a query with the format read by the SSB API.
 
     Args:
@@ -64,7 +64,7 @@ def generate_ssb_query(query_config: list[dict]) -> list[dict]:
     return query
 
 
-def parse_ssb_data(ssb_api_output: str) -> pd.DataFrame:
+def _parse_ssb_data(ssb_api_output: str) -> pd.DataFrame:
     """Parses data from SSB API and converts it to a DataFrame.
 
     Args:
