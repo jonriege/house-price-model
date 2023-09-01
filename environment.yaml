@@ -11,5 +11,7 @@ dependencies:
   - pandas
   - flake8
   - pip
+  - statsmodels
+  - seaborn
   - pip:
       - pyjstat
