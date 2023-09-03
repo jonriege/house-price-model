@@ -8,18 +8,26 @@ from requests import post
 
 
 def load_house_prices(config: dict) -> pd.DataFrame:
-    """Loads annual sqm prices for existing dwellings.
+    """Loads quarterly sqm prices for existing dwellings.
 
     Args:
         config: Config
 
-    Returns:
+    Returns: DataFrame with sqm prices.
     """
     table = config["data_loading"]["house_prices"]["table"]
     query_config = config["data_loading"]["house_prices"]["query"]
     query = _generate_ssb_query(query_config=query_config)
     ssb_api_output = _load_ssb_table(config=config, table=table, query=query)
-    return _parse_ssb_data(ssb_api_output=ssb_api_output)
+    df = _parse_ssb_data(ssb_api_output=ssb_api_output)
+
+    # Use the quarter as the index of the df
+    df["quarter"] = df["kvartal"].replace("K", "Q", regex=True)
+    df["quarter"] = pd.DatetimeIndex(df["quarter"])
+    df = df.set_index("quarter")
+    df.index.freq = "QS-OCT"  # type: ignore
+    df = df.drop(columns="kvartal")
+    return df
 
 
 def _load_ssb_table(config: dict, table: str, query: list[dict]) -> str:
