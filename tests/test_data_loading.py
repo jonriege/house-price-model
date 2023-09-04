@@ -68,6 +68,6 @@ def test_generating_ssb_query(config: dict, ssb_api_query: str):
 def test_load_house_prices(config: dict):
     """Tests loading of house prices."""
     df = load_house_prices(config=config)
-    columns = ["boligtype", "statistikkvariabel", "kvartal", "value"]
+    columns = ["boligtype", "statistikkvariabel", "value"]
     assert isinstance(df, pd.DataFrame)
     assert set(columns).issubset(df.columns)
