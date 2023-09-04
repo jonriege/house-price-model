@@ -4,7 +4,7 @@ import pytest
 from statsmodels.tsa.ar_model import AutoReg
 from statsmodels.tsa.base.tsa_model import TimeSeriesModel
 
-from src.model import (
+from app.model import (
     get_model_class,
     train_validate_model,
     validate_model_performance,

@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import pytest
 
-from src.data_loading import (
+from app.data_loading import (
     _generate_ssb_query,
     _load_ssb_table,
     _parse_ssb_data,
