@@ -13,7 +13,8 @@ def load_house_prices(config: dict) -> pd.DataFrame:
     Args:
         config: Config
 
-    Returns: DataFrame with sqm prices.
+    Returns:
+        DataFrame with sqm prices.
     """
     table = config["data_loading"]["house_prices"]["table"]
     query_config = config["data_loading"]["house_prices"]["query"]
