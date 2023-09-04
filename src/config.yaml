@@ -1,3 +1,9 @@
+model:
+  class: auto_regression
+  kwargs:
+    lags: [1, 3, 4]
+    seasonal: true
+
 data_loading:
   ssb_api_url: 'https://data.ssb.no/api/v0/no/table/'
 
