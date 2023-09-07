@@ -19,3 +19,6 @@ dependencies:
   - flask==2.0.3
   - pip:
       - pyjstat==2.4.0
+variables:
+  FLASK_APP: app/run.py
+  FLASK_DEBUG: true

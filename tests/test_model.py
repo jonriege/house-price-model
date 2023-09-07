@@ -7,6 +7,7 @@ from statsmodels.tsa.base.tsa_model import TimeSeriesModel
 from app.model import (
     get_model_class,
     get_model_forecast,
+    serialize_date_index,
     train_validate_model,
     validate_model_performance,
 )
@@ -58,3 +59,10 @@ def test_get_model_forecast(config: dict, data: pd.Series):
     assert isinstance(forecast_mean, pd.Series)
     assert isinstance(forecast_ci, pd.DataFrame)
     assert len(forecast_mean) == 8
+
+
+def test_date_index_serialization():
+    """Tests serialization of date index."""
+    idx = pd.DatetimeIndex(["1/1/2020", "2/1/2020", "3/1/2020"], dayfirst=True)
+    serialized = serialize_date_index(index=idx)
+    assert serialized == ["2020-01-01", "2020-01-02", "2020-01-03"]
