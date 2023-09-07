@@ -1,4 +1,8 @@
+app:
+  data_path: 'app/data/model_data.json'
+
 model:
+  horizon: 8  # Number of quarters into the future the model is applicable
   class: auto_regression
   kwargs:
     lags: [1, 3, 4]

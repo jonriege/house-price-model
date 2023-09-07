@@ -1,5 +1,5 @@
 """Training and validating the forecasting model"""
-from typing import Any
+import json
 
 import pandas as pd
 from sklearn.metrics import mean_absolute_percentage_error
@@ -24,29 +24,28 @@ def get_model_class(config: dict) -> type[TimeSeriesModel]:
         raise ValueError(f"'{model_str}' is not recognized as a model class.")
 
 
-def validate_model_performance(
-    data: pd.Series, model_class: type[TimeSeriesModel], model_kwargs: Any
-) -> pd.Series:
+def validate_model_performance(config: dict, data: pd.Series) -> pd.Series:
     """Validates model performance with MAPE and time series cross-validation.
 
     Run 5-fold time series cross validation, calculating mean absolute
     percentage error (MAPE) for each fold. Each fold uses observations up to 2
-    years in the future (i.e. 8 observations) for validation.
+    years in the future (i.e. 8 observations) for validation. This is controlled
+    via the 'horizon' variable in the model config.
 
     Args:
+        config: Config
         data: Time series data for training and validation
-        model_class: Statsmodels model class
-        model_kwargs: Model configuration
 
     Returns:
         MAPE per fold
     """
-    tscv = TimeSeriesSplit(n_splits=5, test_size=8)
+    model_class = get_model_class(config=config)
+    tscv = TimeSeriesSplit(n_splits=5, test_size=config["model"]["horizon"])
     metrics = []
     for train_idx, test_idx in tscv.split(data):
         train = data.iloc[train_idx]
         test = data.iloc[test_idx]
-        model = model_class(endog=train, **model_kwargs).fit()
+        model = model_class(endog=train, **config["model"]["kwargs"]).fit()
         pred = model.predict(start=test_idx[0], end=test_idx[-1])
         mape = mean_absolute_percentage_error(y_true=test, y_pred=pred)
         metrics.append(mape)
@@ -68,7 +67,73 @@ def train_validate_model(
     model_class = get_model_class(config=config)
     model_kwargs = config["model"]["kwargs"]
     model = model_class(endog=data, **model_kwargs)
-    mape = validate_model_performance(
-        data=data, model_class=model_class, model_kwargs=model_kwargs
-    )
+    mape = validate_model_performance(config=config, data=data)
     return model, mape.mean()
+
+
+def get_model_forecast(
+    config: dict, model: TimeSeriesModel
+) -> tuple[pd.Series, pd.DataFrame]:
+    """Gets the mean prediction and confidence interval of the model.
+
+    Args:
+        config: config
+        model: Forecasting model object with data
+
+    Returns:
+        Forecast mean, forecast 95% confidence interval
+    """
+    res = model.fit()
+    data_len = res.nobs + model.hold_back
+    n_pred = config["model"]["horizon"]
+    forecast = res.get_prediction(start=data_len, end=data_len + n_pred - 1)
+    return forecast.predicted_mean, forecast.conf_int()
+
+
+def serialize_date_index(index: pd.Index) -> list[str]:
+    """Serializes a pandas DatetimeIndex.
+
+    Args:
+        index: Index object, typed as Index rather than DatetimeIndex to avoid
+            issues with mypy.
+
+    Returns:
+        Serialized index
+    """
+    if not isinstance(index, pd.DatetimeIndex):
+        raise ValueError("Date index must be a DatetimeIndex to be serialized.")
+    return list(index.strftime("%Y-%m-%d"))
+
+
+def store_data_and_model_preds(
+    config: dict, data: pd.Series, model: TimeSeriesModel, mape: float
+) -> None:
+    """Stores data and model predictions to display on the website.
+
+    Args:
+        config: Config
+        data: Time series data
+        model: Model object with data
+        mape: Mean absolute percentage error of model
+    """
+    forecast_mean, forecast_ci = get_model_forecast(config=config, model=model)
+    data_and_preds = {
+        "data": {
+            "labels": serialize_date_index(data.index),
+            "values": list(data.values.astype(float)),
+        },
+        "model": {
+            "mape": mape,
+            "forecast_mean": {
+                "labels": serialize_date_index(forecast_mean.index),
+                "values": list(forecast_mean.values.astype(float)),
+            },
+            "forecast_ci": {
+                "labels": serialize_date_index(forecast_ci.index),
+                "upper": list(forecast_ci.upper.values.astype(float)),
+                "lower": list(forecast_ci.lower.values.astype(float)),
+            },
+        },
+    }
+    with open(config["app"]["data_path"], "w") as file:
+        json.dump(data_and_preds, file, indent=4)

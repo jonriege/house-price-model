@@ -6,6 +6,7 @@ from statsmodels.tsa.base.tsa_model import TimeSeriesModel
 
 from app.model import (
     get_model_class,
+    get_model_forecast,
     train_validate_model,
     validate_model_performance,
 )
@@ -31,13 +32,11 @@ def test_get_model_class(config: dict):
         get_model_class(config=config)
 
 
-def test_validate_model_performance(data: pd.Series):
+def test_validate_model_performance(config: dict, data: pd.Series):
     """Tests model validation."""
-    model_class = AutoReg
-    model_kwargs = {"lags": 1}
-    metrics = validate_model_performance(
-        data=data, model_class=model_class, model_kwargs=model_kwargs
-    )
+    config["model"]["class"] = "auto_regression"
+    config["model"]["kwargs"] = {"lags": 1}
+    metrics = validate_model_performance(config=config, data=data)
     assert isinstance(metrics, pd.Series)
     assert pd.api.types.is_float_dtype(metrics)
     assert all(metrics >= 0.0)
@@ -49,3 +48,13 @@ def test_train_validate_model(data: pd.Series, config: dict):
     assert isinstance(model, TimeSeriesModel)
     assert isinstance(mape, float)
     assert mape >= 0.0
+
+
+def test_get_model_forecast(config: dict, data: pd.Series):
+    """Tests getting the model forecast."""
+    config["model"]["horizon"] = 8
+    model = AutoReg(endog=data, lags=1)
+    forecast_mean, forecast_ci = get_model_forecast(config=config, model=model)
+    assert isinstance(forecast_mean, pd.Series)
+    assert isinstance(forecast_ci, pd.DataFrame)
+    assert len(forecast_mean) == 8
