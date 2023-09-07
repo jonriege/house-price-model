@@ -1,4 +1,6 @@
 """Test model training and validation."""
+from unittest.mock import mock_open, patch
+
 import pandas as pd
 import pytest
 from statsmodels.tsa.ar_model import AutoReg
@@ -8,6 +10,7 @@ from app.model import (
     get_model_class,
     get_model_forecast,
     serialize_date_index,
+    store_data_and_model_preds,
     train_validate_model,
     validate_model_performance,
 )
@@ -66,3 +69,15 @@ def test_date_index_serialization():
     idx = pd.DatetimeIndex(["1/1/2020", "2/1/2020", "3/1/2020"], dayfirst=True)
     serialized = serialize_date_index(index=idx)
     assert serialized == ["2020-01-01", "2020-01-02", "2020-01-03"]
+
+
+def test_store_data_and_model_preds(config: dict, data: pd.Series):
+    """Tests storage of model data."""
+    model = AutoReg(endog=data, lags=1)
+    mape = 0.0
+    m = mock_open()
+    with patch(target="builtins.open", new=m):
+        store_data_and_model_preds(
+            config=config, data=data, model=model, mape=mape
+        )
+    m.assert_called_once()
