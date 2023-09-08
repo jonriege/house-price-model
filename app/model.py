@@ -86,7 +86,7 @@ def get_model_forecast(
     res = model.fit()
     data_len = res.nobs + model.hold_back
     n_pred = config["model"]["horizon"]
-    forecast = res.get_prediction(start=data_len, end=data_len + n_pred - 1)
+    forecast = res.get_prediction(start=data_len - 1, end=data_len + n_pred - 1)
     return forecast.predicted_mean, forecast.conf_int()
 
 
