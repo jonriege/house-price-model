@@ -1,12 +1,19 @@
 """Run the Flask application."""
+import json
+
 from flask import Flask, render_template
 
+from app.utils import load_config
+
+config = load_config()
 app = Flask(__name__)
 
 
 @app.route("/")
 def main() -> str:
-    return render_template("home/index.html")
+    with open(config["app"]["data_path"], "r") as file:
+        data = json.load(file)
+    return render_template("home/index.html", data=data)
 
 
 @app.errorhandler(404)

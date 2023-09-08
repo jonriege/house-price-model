@@ -126,10 +126,7 @@
             </div>
             <div class="card-body">
               <!-- Chart -->
-              <div class="chart">
-                <!-- Chart wrapper -->
-                <canvas id="lineChart" height="100"></canvas>
-              </div>
+              <canvas id="lineChart" height="100"></canvas>
             </div>
           </div>
         </div>
@@ -158,46 +155,69 @@
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
-
-  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
-  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
-  <script>
-    const labels = ['January', 'February', 'March', 'April', 'May'];
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Historisk boligpris',
-            borderColor: 'rgb(75, 192, 192)',
-            data: [10, 30, 15, 45, 25],
-            fill: false,
-        }]
-    };
-    const ctx = document.getElementById('lineChart').getContext('2d');
-    const lineChart = new Chart(ctx, {
-        type: 'line',
-        data: data,
-        options: {
-            responsive: true,
-            legend: {
-              position: 'bottom'
-            },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Month',
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@^3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
+    <script>
+        const data = {
+            datasets: [{
+                label: 'Historisk boligpris',
+                borderColor: 'rgb(75, 192, 192)',
+                data: [
+                    { x: '2023-01-01', y: 10 },
+                    { x: '2023-02-01', y: 15 },
+                    { x: '2023-03-01', y: 20 }
+                ],
+                fill: false,
+            }]
+        };
+        {#    const ctx = document.getElementById('lineChart').getContext('2d');
+            const lineChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    legend: {
+                      position: 'bottom'
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                              unit: 'day',
+                              displayFormats: {
+                                day: 'MMM D',
+                              },
+                            },
+                            title: {
+                                display: true,
+                                text: 'Month',
+                            },
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Value',
+                            },
+                        },
                     },
                 },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Value',
+            });#}
+        const ctx = document.getElementById('lineChart');
+        new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        type: 'time'
                     },
-                },
-            },
-        },
-    });
-
-  </script>
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 
 {% endblock javascripts %}
