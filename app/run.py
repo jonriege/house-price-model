@@ -3,10 +3,19 @@ import json
 
 from flask import Flask, render_template
 
+from app.data_loading import load_house_prices
+from app.model import store_data_and_model_preds, train_validate_model
 from app.utils import load_config
 
 config = load_config()
 app = Flask(__name__)
+
+
+def run_model_pipeline() -> None:
+    """Runs the model pipeline and stores the results."""
+    data = load_house_prices(config=config)["value"]
+    model, mape = train_validate_model(config=config, data=data)
+    store_data_and_model_preds(config=config, data=data, model=model, mape=mape)
 
 
 @app.route("/")

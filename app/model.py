@@ -90,19 +90,24 @@ def get_model_forecast(
     return forecast.predicted_mean, forecast.conf_int()
 
 
-def serialize_date_index(index: pd.Index) -> list[str]:
+def serialize_timeseries(series: pd.Series) -> list[dict[str, float]]:
     """Serializes a pandas DatetimeIndex.
 
     Args:
-        index: Index object, typed as Index rather than DatetimeIndex to avoid
-            issues with mypy.
+        series: Pandas series with DatetimeIndex
 
     Returns:
-        Serialized index
+        List of dicts with date and value
     """
-    if not isinstance(index, pd.DatetimeIndex):
+    if not isinstance(series.index, pd.DatetimeIndex):
         raise ValueError("Date index must be a DatetimeIndex to be serialized.")
-    return list(index.strftime("%Y-%m-%d"))
+    return [
+        {
+            "date": date.strftime("%Y-%m-%d"),  # type: ignore
+            "value": float(value),
+        }
+        for date, value in series.items()
+    ]
 
 
 def store_data_and_model_preds(
@@ -118,20 +123,13 @@ def store_data_and_model_preds(
     """
     forecast_mean, forecast_ci = get_model_forecast(config=config, model=model)
     data_and_preds = {
-        "data": {
-            "labels": serialize_date_index(data.index),
-            "values": list(data.values.astype(float)),
-        },
+        "data": serialize_timeseries(series=data),
         "model": {
             "mape": mape,
-            "forecast_mean": {
-                "labels": serialize_date_index(forecast_mean.index),
-                "values": list(forecast_mean.values.astype(float)),
-            },
+            "forecast_mean": serialize_timeseries(series=forecast_mean),
             "forecast_ci": {
-                "labels": serialize_date_index(forecast_ci.index),
-                "upper": list(forecast_ci.upper.values.astype(float)),
-                "lower": list(forecast_ci.lower.values.astype(float)),
+                "upper": serialize_timeseries(series=forecast_ci.upper),
+                "lower": serialize_timeseries(series=forecast_ci.lower),
             },
         },
     }
