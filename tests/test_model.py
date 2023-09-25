@@ -61,8 +61,8 @@ def test_get_model_forecast(config: dict, data: pd.Series):
     forecast_mean, forecast_ci = get_model_forecast(config=config, model=model)
     assert isinstance(forecast_mean, pd.Series)
     assert isinstance(forecast_ci, pd.DataFrame)
-    assert len(forecast_mean) == 8
-    assert len(forecast_ci) == 8
+    assert len(forecast_mean) == 9
+    assert len(forecast_ci) == 9
 
 
 def test_timeseries_serialization(data: pd.Series):
