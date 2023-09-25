@@ -1,6 +1,8 @@
 # House Price Model
 A simple autoregression model for predicting house prices in Norway based on publicly available data. The model is deployed using Flask and is available at [TBD](TBD). 
 
+![Site screenshot](app/static/assets/img/site.png)
+
 # Getting started
 This project is built using Anaconda with the environment defined in `environment.yaml`. See the [Anaconda documentation](https://docs.anaconda.com/free/anaconda/install/index.html) for how to install Anaconda and set up the environment.
 
