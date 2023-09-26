@@ -17,6 +17,7 @@ dependencies:
   - matplotlib==3.7.1
   - scikit-learn=1.2.2
   - flask==2.0.3
+  - gunicorn==20.1.0
   - pip:
       - pyjstat==2.4.0
 variables:
