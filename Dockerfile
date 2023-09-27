@@ -12,4 +12,4 @@ RUN conda env create -f environment.yaml
 
 COPY . .
 
-CMD ["conda", "run", "-n", "house-price-model-env", "gunicorn", "-b", "0.0.0.0:8080", "app.run:app"]
+CMD ["conda", "run", "-n", "house-price-model-env", "gunicorn", "--access-logfile", "'-'", "--error-logfile", "'-'", "app.run:app"]
