@@ -9,9 +9,6 @@ This project is built using Anaconda with the environment defined in `environmen
 ### Running a test server
 To run a Flask development server, run `flask run` from the root directory. The server will be available at `http://localhost:5000`. Note that this requires the environment variable `FLASK_APP=app/run.py` to be set.
 
-### Running a production server
-To run the server in production using gunicorn, run `gunicorn -b 0.0.0.0:8000 app.run:app` from the root directory.
-
 ### Running tests
 Tests are written using pytest and are located in `tests/`. Run `pytest` to run the full test suite.
 
