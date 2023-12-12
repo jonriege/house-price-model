@@ -1,5 +1,5 @@
 # House Price Model
-A simple autoregression model for predicting house prices in Norway based on publicly available data. The model is deployed using Flask and is available at [house-price-model.azurewebsites.net](https://house-price-model.azurewebsites.net). 
+A simple autoregression model for predicting house prices in Norway based on publicly available data. The model is deployed using Flask.
 
 ![Site screenshot](app/static/assets/img/site.png)
 
